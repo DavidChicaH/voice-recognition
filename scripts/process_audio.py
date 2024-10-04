@@ -1,43 +1,35 @@
+from scipy.io import wavfile
 from scipy.io.wavfile import read
 from scipy.fft import fft, fftfreq
 import numpy as np
-from scipy.signal import butter, filtfilt
+from scipy.signal import butter, filtfilt, lfilter
 
 
-def low_pass_filter(data, fc, fs):
-    b, a = butter(4, fc / (0.5 * fs), btype='lowpass')
-    return filtfilt(b, a, data)
-
-def high_pass_filter(data, fc, fs):
-    b, a = butter(4, fc / (0.5 * fs), btype='highpass')
-    return filtfilt(b, a, data)
+def low_pass_filter(data, fc, fs, order = 5 ):
+    nyquist = 0.5 * fs
+    normal_fc = fc / nyquist
+    b, a = butter(order,  normal_fc, btype='lowpass')
+    y = lfilter(b, a, data)
+    return y
+def high_pass_filter(data, fc, fs, order = 5):
+    nyquist = 0.5 * fs
+    normal_fc = fc / nyquist
+    b, a = butter(order,  normal_fc, btype='highpass')
+    y = lfilter(b, a, data)
+    return y
     
 
-def process_audiofile(path_file):
-    fs, data = read(path_file)
-
-    data = data.flatten()
-
-    fft_data = fft(data)
+def process_audiofile(audiofile, filename):
+    fs, audio = wavfile.read(audiofile)
     
-    frequencies = fftfreq(len(data), 1/fs)
-
-    idx_positive_frequencies = (frequencies > 0) & (frequencies <= 500)
-    positive_frequencies = frequencies[idx_positive_frequencies]
-    positive_amplitudes = np.abs(fft_data[idx_positive_frequencies])
+    audio_fft = np.fft.fft(audio)
+    frequencies =  np.fft.fftfreq(len(audio), 1/fs)
     
-        
-    fc_low = 1000
-    low_data = low_pass_filter(data, fc_low, fs)
-    fft_low = fft(low_data)
-    low_amplitudes = np.abs(fft_low[idx_positive_frequencies])
+    magnitudes = np.abs(audio_fft)
     
-    
-    fc_high = 500
-    high_data = high_pass_filter(data, fc_high, fs)
-    fft_high = fft(high_data)
-    high_amplitudes = np.abs(fft_high[idx_positive_frequencies])
+    with open(f"./data/txt/{filename}.txt", 'w') as f:
+        f.write("Frecuencia (Hz), Amplitud\n")
+        for freq, mag in zip(frequencies, magnitudes):
+            f.write(f"{freq},{mag}\n")
 
-
-
-    return positive_frequencies, positive_amplitudes, low_amplitudes, high_amplitudes
+    print(f"Frequencies saved in {filename}.txt")
