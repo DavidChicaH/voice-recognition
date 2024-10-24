@@ -163,3 +163,4 @@ cython_debug/
 data/raw/*.wav
 data/cleaned/*.wav
 data/txt/*.txt
+data/csv/*.csv

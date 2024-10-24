@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-def extract_mfccs(file_path, csv_file='mfcc_spectrogram.csv'):
+def extract_mfccs(file_path, csv_file='./data/csv/mfcc_spectrogram.csv'):
     """
     Función que procesa un archivo de audio, calcula sus características MFCC,
     y las guarda en un archivo CSV (en modo append).
