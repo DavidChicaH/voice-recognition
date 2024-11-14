@@ -2,10 +2,24 @@ from scripts.record_audio import record_audiofile
 from scripts.save_freq import save_frequencies
 from scripts.freq_graph import freq_graph
 from scripts.clean_voice import clean_voice
-from scripts.extract_features import extract_mfccs
-from scripts.extra import extract_features
 from scripts.createUser import createUser
+from models.train_model import train_model
+from models.predict_model import predict_model
+from models.prediction import predict
 
+prediction_audio_test = "prediction_audio_test"
+
+audiofile, filename = record_audiofile(5, prediction_audio_test)
+
+cleaned_audio_file = clean_voice(audiofile, filename)
+
+X_train, X_test, Y_train, Y_test = train_model()
+
+predict_model(X_train, X_test, Y_train, Y_test)
+
+predict()
+
+"""
 users = createUser()
 
 duration = int(input("Enter the duration of the recording in seconds: "))
@@ -54,6 +68,6 @@ while True:
         exit()
     else:
         print("Invalid option, please try again")
-
+"""
 
 

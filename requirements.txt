@@ -7,3 +7,6 @@ soundfile==0.12.1
 PyQt5==5.15.10
 pandas==2.2.3
 librosa==0.10.2.post1
+scikit-learn==1.5.2
+joblib==1.4.2
+seaborn==0.13.2
